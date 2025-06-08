@@ -11,4 +11,5 @@ public interface UserService {
     User updateUser(UUID id, UserRequestDTO dto);
     User partiallyUpdateUser(UUID id, UserRequestDTO dto);
     void deleteUser(UUID id);
+    void updateLastLogin(UUID id);
 }
