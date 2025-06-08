@@ -4,6 +4,7 @@ import com.evaluacion.dto.PhoneDTO;
 import com.evaluacion.dto.UserRequestDTO;
 import com.evaluacion.entity.Phone;
 import com.evaluacion.entity.User;
+import com.evaluacion.usuariosapi.dto.PublicUserResponse;
 import com.evaluacion.usuariosapi.dto.UserRequest;
 import com.evaluacion.usuariosapi.dto.UserResponse;
 import com.evaluacion.util.DateUtils;
@@ -54,6 +55,29 @@ public class UserMapper {
                 usuario.getPhones().stream()
                         .map(t -> {
                             var tel = new com.evaluacion.usuariosapi.dto.Phone();
+                            tel.setNumber(t.getNumber());
+                            tel.setCityCode(t.getCityCode());
+                            tel.setCountryCode(t.getCountryCode());
+                            return tel;
+                        }).collect(Collectors.toList())
+        );
+        return response;
+    }
+
+    public static PublicUserResponse toPublicResponse(User usuario){
+        PublicUserResponse response = new PublicUserResponse();
+
+        response.setId(usuario.getId());
+        response.setCreated(DateUtils.toOffsetDateTime(usuario.getCreated()));
+        response.setModified(DateUtils.toOffsetDateTime(usuario.getModified()));
+        response.setLastLogin(DateUtils.toOffsetDateTime(usuario.getLastLogin()));
+        response.setIsActive(usuario.isActive());
+        response.setName(usuario.getName());
+        response.setEmail(usuario.getEmail());
+        response.setPhones(
+                usuario.getPhones().stream()
+                        .map( t ->{
+                            com.evaluacion.usuariosapi.dto.Phone tel = new com.evaluacion.usuariosapi.dto.Phone();
                             tel.setNumber(t.getNumber());
                             tel.setCityCode(t.getCityCode());
                             tel.setCountryCode(t.getCountryCode());
