@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: API Usuarios
+  description: API RESTful para la gestión de usuarios
+  version: 1.0.0
+
+paths:
+  /user:
+    post:
+      tags:
+        - Usuarios
+      summary: Crear un nuevo usuario
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user/{id}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtener usuario por ID
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUserResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Usuarios
+      summary: Actualizar completamente mi usuario
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      tags:
+        - Usuarios
+      summary: Actualizar parcialmente mi usuario
+      operationId: partiallyUpdateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: Usuario actualizado parcialmente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Usuarios
+      summary: Eliminar mi usuario por ID
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Usuario eliminado correctamente
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+
+    UserRequest:
+      type: object
+      required: [name, email, password, phones]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        last_login:
+          type: string
+          format: date-time
+        token:
+          type: string
+        is_active:
+          type: boolean
+        name:
+          type: string
+        email:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+
+    PublicUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        last_login:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+        name:
+          type: string
+        email:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+
+    Phone:
+      type: object
+      required: [number, city_code, country_code]
+      properties:
+        number:
+          type: string
+        city_code:
+          type: string
+        country_code:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
