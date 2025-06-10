@@ -33,4 +33,7 @@ public class Phone {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Phone(String number, String cityCode, String countryCode, User user) {
+    }
 }

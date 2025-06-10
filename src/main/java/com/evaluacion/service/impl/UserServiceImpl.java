@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(UserRequestDTO dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new ValidationException("El correo ya está registrado");
+            throw new ValidationException("El correo ya esta registrado");
         }
 
         User user = UserMapper.toEntity(dto);
@@ -66,6 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(UUID id, UserRequestDTO dto) {
         validatePropietario(id);
+
         User existente = userRepository.findById(id)
                 .orElseThrow(() -> new ValidationException("Usuario no encontrado"));
 
@@ -79,8 +80,8 @@ public class UserServiceImpl implements UserService {
         existente.setModified(LocalDateTime.now());
         existente.setLastLogin(LocalDateTime.now());
 
-        existente.getPhones().clear();
         if (dto.getPhones() != null) {
+            existente.getPhones().clear();
             existente.getPhones().addAll(PhoneMapper.mapearDesdeDTOs(dto.getPhones(), existente));
         }
 
@@ -107,7 +108,6 @@ public class UserServiceImpl implements UserService {
         if (dto.getPassword() != null) existente.setPassword(dto.getPassword());
 
         if (dto.getPhones() != null) {
-            existente.getPhones().clear();
             existente.getPhones().addAll(PhoneMapper.mapearDesdeDTOs(dto.getPhones(), existente));
         }
 
